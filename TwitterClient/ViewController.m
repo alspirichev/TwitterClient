@@ -15,7 +15,7 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
 
 @interface ViewController ()
 
-@property ASFollowing* following;
+//@property ASFollowing* following;
 
 @end
 
@@ -27,21 +27,30 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
 @synthesize fetchedResultsController    = _fetchedResultsController;
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+        
+    UIBarButtonItem* saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+                                                                                target:self
+                                                                                action:@selector(saveToCoreData)];
+    self.navigationItem.leftBarButtonItem = saveButton;
+    
+    UIBarButtonItem* deleteButton = [[UIBarButtonItem alloc] initWithTitle:@"Delete"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(deleteAllObjects)];
+    self.navigationItem.rightBarButtonItem = deleteButton;
+
     
     // [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    
     STTwitterAPI* twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:consumerKey
                                                             consumerSecret:consumerSecret];
     [twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
+        
+        [twitter setUserID:[NSString stringWithFormat:@"3419763023"]];
                 
         [twitter getFriendsForScreenName:@"alspirichev" successBlock:^(NSArray *friends) {
-            
-            NSLog(@"successBlock !!");
-            
             self.twitterFeed = [NSMutableArray arrayWithArray:friends];
             [self.tableView reloadData];
         } errorBlock:^(NSError *error) {
@@ -53,16 +62,9 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
-    //[self saveToCoreData];
-    
     [self printDB];
 }
 
--(void) viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    [self saveToCoreData];
-}
 
 /*
  -(NSString*) bearerTokenBase64Credentials
@@ -181,12 +183,12 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
         NSString* numberFollowing = [NSString stringWithFormat:@"%@", JSONresponse[@"followers_count"]];
         NSNumber* followingCount = [NSNumber numberWithInt:[numberFollowing intValue]];
         
-        self.following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
+        NSManagedObject* following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
                                                        inManagedObjectContext:self.managedObjectContext];
         
-        [self.following setValue:name forKey:@"name"];
-        [self.following setValue:imageData forKey:@"profileImage"];
-        [self.following setValue:followingCount forKey:@"followersCount"];
+        [following setValue:name forKey:@"name"];
+        [following setValue:imageData forKey:@"profileImage"];
+        [following setValue:followingCount forKey:@"followersCount"];
         
         NSError* error = nil;
         
@@ -194,8 +196,6 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
             NSLog(@"%@", [error localizedDescription]);
         }
     }
-    
-    NSLog(@"saveToCoreData COMPLITE !!!!!");
 }
 
 -(void) printDB
