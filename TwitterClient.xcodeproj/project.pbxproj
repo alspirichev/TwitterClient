@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0EFCC0C531B5519056468B5F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 387E12FE641D47E0F973FDB9 /* libPods.a */; };
+		CD5050C11B92434000F0C7EA /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = CD5050C01B92434000F0C7EA /* user.png */; };
 		CD74B4D61B91CA6F00640993 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4D51B91CA6F00640993 /* main.m */; };
 		CD74B4D91B91CA6F00640993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4D81B91CA6F00640993 /* AppDelegate.m */; };
 		CD74B4DC1B91CA7000640993 /* TwitterClient.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4DA1B91CA6F00640993 /* TwitterClient.xcdatamodeld */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		2211758DFE9F7E33108D2C39 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		387E12FE641D47E0F973FDB9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD5050C01B92434000F0C7EA /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		CD74B4D01B91CA6F00640993 /* TwitterClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD74B4D41B91CA6F00640993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD74B4D51B91CA6F00640993 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		CD74B4D31B91CA6F00640993 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CD5050C01B92434000F0C7EA /* user.png */,
 				CD74B4D41B91CA6F00640993 /* Info.plist */,
 				CD74B4D51B91CA6F00640993 /* main.m */,
 			);
@@ -244,6 +247,7 @@
 			files = (
 				CD74B4E21B91CA7000640993 /* Main.storyboard in Resources */,
 				CD74B4E71B91CA7000640993 /* LaunchScreen.xib in Resources */,
+				CD5050C11B92434000F0C7EA /* user.png in Resources */,
 				CD74B4E41B91CA7000640993 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
