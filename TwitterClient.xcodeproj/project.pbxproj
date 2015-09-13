@@ -18,6 +18,8 @@
 		CD74B4E71B91CA7000640993 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD74B4E51B91CA7000640993 /* LaunchScreen.xib */; };
 		CD74B4F31B91CA7000640993 /* TwitterClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4F21B91CA7000640993 /* TwitterClientTests.m */; };
 		CD74B4FE1B91CC9600640993 /* ASFollowing.m in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4FD1B91CC9600640993 /* ASFollowing.m */; };
+		CDB2DDCC1B97997B00796487 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB2DDCB1B97997A00796487 /* Twitter.framework */; };
+		CDE7ACD71B9E097E00AEC894 /* ASSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE7ACD61B9E097E00AEC894 /* ASSignInViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,9 @@
 		CD74B4F21B91CA7000640993 /* TwitterClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwitterClientTests.m; sourceTree = "<group>"; };
 		CD74B4FC1B91CC9600640993 /* ASFollowing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASFollowing.h; sourceTree = "<group>"; };
 		CD74B4FD1B91CC9600640993 /* ASFollowing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASFollowing.m; sourceTree = "<group>"; };
+		CDB2DDCB1B97997A00796487 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		CDE7ACD51B9E097E00AEC894 /* ASSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASSignInViewController.h; sourceTree = "<group>"; };
+		CDE7ACD61B9E097E00AEC894 /* ASSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASSignInViewController.m; sourceTree = "<group>"; };
 		F6053182170FA20FF9C0B085 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDB2DDCC1B97997B00796487 /* Twitter.framework in Frameworks */,
 				0EFCC0C531B5519056468B5F /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,13 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				CD74B4FF1B91CCAE00640993 /* CoreData Model */,
-				CD74B4D71B91CA6F00640993 /* AppDelegate.h */,
-				CD74B4D81B91CA6F00640993 /* AppDelegate.m */,
-				CD74B4DD1B91CA7000640993 /* ViewController.h */,
-				CD74B4DE1B91CA7000640993 /* ViewController.m */,
-				CD74B4E01B91CA7000640993 /* Main.storyboard */,
-				CD74B4E31B91CA7000640993 /* Images.xcassets */,
-				CD74B4E51B91CA7000640993 /* LaunchScreen.xib */,
+				CDE7ACD11B9E06EA00AEC894 /* Controllers */,
+				CDE7ACD01B9E06DB00AEC894 /* Views */,
 				CD74B4D31B91CA6F00640993 /* Supporting Files */,
 			);
 			path = TwitterClient;
@@ -120,7 +121,10 @@
 		CD74B4D31B91CA6F00640993 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CD5050C01B92434000F0C7EA /* user.png */,
+				CD74B4D71B91CA6F00640993 /* AppDelegate.h */,
+				CD74B4D81B91CA6F00640993 /* AppDelegate.m */,
+				CD74B4E31B91CA7000640993 /* Images.xcassets */,
+				CDE7ACD21B9E071B00AEC894 /* Pictures */,
 				CD74B4D41B91CA6F00640993 /* Info.plist */,
 				CD74B4D51B91CA6F00640993 /* main.m */,
 			);
@@ -154,9 +158,38 @@
 			name = "CoreData Model";
 			sourceTree = "<group>";
 		};
+		CDE7ACD01B9E06DB00AEC894 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CD74B4E01B91CA7000640993 /* Main.storyboard */,
+				CD74B4E51B91CA7000640993 /* LaunchScreen.xib */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		CDE7ACD11B9E06EA00AEC894 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				CDE7ACD51B9E097E00AEC894 /* ASSignInViewController.h */,
+				CDE7ACD61B9E097E00AEC894 /* ASSignInViewController.m */,
+				CD74B4DD1B91CA7000640993 /* ViewController.h */,
+				CD74B4DE1B91CA7000640993 /* ViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		CDE7ACD21B9E071B00AEC894 /* Pictures */ = {
+			isa = PBXGroup;
+			children = (
+				CD5050C01B92434000F0C7EA /* user.png */,
+			);
+			name = Pictures;
+			sourceTree = "<group>";
+		};
 		F8A0EA9F33F6D58E5E0FB3BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CDB2DDCB1B97997A00796487 /* Twitter.framework */,
 				387E12FE641D47E0F973FDB9 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -301,6 +334,7 @@
 			files = (
 				CD74B4DC1B91CA7000640993 /* TwitterClient.xcdatamodeld in Sources */,
 				CD74B4D91B91CA6F00640993 /* AppDelegate.m in Sources */,
+				CDE7ACD71B9E097E00AEC894 /* ASSignInViewController.m in Sources */,
 				CD74B4DF1B91CA7000640993 /* ViewController.m in Sources */,
 				CD74B4D61B91CA6F00640993 /* main.m in Sources */,
 				CD74B4FE1B91CC9600640993 /* ASFollowing.m in Sources */,
@@ -430,9 +464,11 @@
 			baseConfigurationReference = F6053182170FA20FF9C0B085 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = TwitterClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -441,9 +477,11 @@
 			baseConfigurationReference = 2211758DFE9F7E33108D2C39 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = TwitterClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

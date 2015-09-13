@@ -15,8 +15,6 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
 
 @interface ViewController ()
 
-//@property ASFollowing* following;
-
 @end
 
 @implementation ViewController
@@ -26,21 +24,22 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
 @synthesize persistentStoreCoordinator  = _persistentStoreCoordinator;
 @synthesize fetchedResultsController    = _fetchedResultsController;
 
+#pragma mark - View life cycle
+
 - (void)viewDidLoad {
-        
-    UIBarButtonItem* saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                                                                target:self
-                                                                                action:@selector(saveToCoreData)];
-    self.navigationItem.leftBarButtonItem = saveButton;
+    
+    
+    UIBarButtonItem* downloadButton = [[UIBarButtonItem alloc] initWithTitle:@"Download"
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(saveToCoreData)];
+    self.navigationItem.leftBarButtonItem = downloadButton;
     
     UIBarButtonItem* deleteButton = [[UIBarButtonItem alloc] initWithTitle:@"Delete"
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:@selector(deleteAllObjects)];
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(deleteAllObjects)];
     self.navigationItem.rightBarButtonItem = deleteButton;
-
-    
-    // [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
@@ -49,7 +48,7 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     [twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
         
         [twitter setUserID:[NSString stringWithFormat:@"3419763023"]];
-                
+        
         [twitter getFriendsForScreenName:@"alspirichev" successBlock:^(NSArray *friends) {
             self.twitterFeed = [NSMutableArray arrayWithArray:friends];
             [self.tableView reloadData];
@@ -59,53 +58,16 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     } errorBlock:^(NSError *error) {
         NSLog(@"%@", error.debugDescription);
     }];
-    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
+
     [self printDB];
 }
-
-
-/*
- -(NSString*) bearerTokenBase64Credentials
- {
- NSString* bearerToken = [NSString stringWithFormat:@"%@:%@", consumerKey, consumerSecret];
- NSData* data = [bearerToken dataUsingEncoding:NSUTF8StringEncoding];
- NSString* bearerTokenBase64 = [data base64EncodedString];
- 
- NSLog(@"bearerTokenBase64: %@", bearerTokenBase64);
- 
- return bearerTokenBase64;
- }
- 
- -(void) obtainABearerToken
- {
- AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
- manager.requestSerializer = [AFHTTPRequestSerializer serializer];
- manager.responseSerializer = [AFJSONResponseSerializer serializer];
- 
- [manager.requestSerializer setValue:[NSString stringWithFormat:@"Basic %@", [self bearerTokenBase64Credentials]]
- forHTTPHeaderField:@"Authorization"];
- 
- [manager.requestSerializer setValue:@"application/x-www-form-urlencoded;charset=UTF-8"
- forHTTPHeaderField:@"Content-Type"];
- 
- 
- [manager POST:@"https://api.twitter.com/oauth2/token"
- parameters:@{@"grant_type":@"client_credentials"}
- success:^(AFHTTPRequestOperation *operation, id responseObject) {
- NSLog(@"Success");
- }     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
- NSLog(@"Fail");
- }];
- 
- }
- */
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - Work with Core Data
 
@@ -134,7 +96,7 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                         managedObjectContext:self.managedObjectContext
                                           sectionNameKeyPath:nil
-                                                   cacheName:@"Master"];
+                                                   cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
@@ -183,12 +145,12 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
         NSString* numberFollowing = [NSString stringWithFormat:@"%@", JSONresponse[@"followers_count"]];
         NSNumber* followingCount = [NSNumber numberWithInt:[numberFollowing intValue]];
         
-        NSManagedObject* following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
+        ASFollowing* following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
                                                        inManagedObjectContext:self.managedObjectContext];
         
-        [following setValue:name forKey:@"name"];
-        [following setValue:imageData forKey:@"profileImage"];
-        [following setValue:followingCount forKey:@"followersCount"];
+        following.name = name;
+        following.profileImage = imageData;
+        following.followersCount = followingCount;
         
         NSError* error = nil;
         
@@ -196,16 +158,36 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
             NSLog(@"%@", [error localizedDescription]);
         }
     }
+    
+    //[self.tableView reloadData];
+    
+    NSMutableArray* newPath = [NSMutableArray array];
+    for(int i = (int)[self.twitterFeed count]; i ; )
+     {
+        
+     }
+    
+    [self.tableView beginUpdates];
+    
+    
+    
+    [self.tableView endUpdates];
+    
+    [self printDB];
+    
+    [[[UIAlertView alloc] initWithTitle:@"Saveing..."
+                               message:@"Data been saved."
+                              delegate:self
+                     cancelButtonTitle:@"OK"
+                     otherButtonTitles:nil, nil] show];
 }
 
 -(void) printDB
 {
     NSFetchRequest* request = [[NSFetchRequest alloc] init];
     
-    NSEntityDescription* description =
-    [NSEntityDescription entityForName:@"ASFollowing"
-                inManagedObjectContext:self.managedObjectContext];
-    
+    NSEntityDescription* description = [NSEntityDescription entityForName:@"ASFollowing"
+                                                   inManagedObjectContext:self.managedObjectContext];
     [request setEntity:description];
     
     NSError* requestError = nil;
@@ -214,19 +196,16 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
         NSLog(@"%@", [requestError localizedDescription]);
     }
     
-    NSLog(@"!!!!!!!!!!!!! BEGIN !!!!!!!!!!!!");
-    
     for (ASFollowing* object in resultArray) {
         ASFollowing* following = (ASFollowing*) object;
         
         NSLog(@"Name: %@ Followers count: %@", following.name, following.followersCount);
     }
-    NSLog(@"!!!!!!!!!!!!! END !!!!!!!!!!!!!!");
     
 }
 
-- (void) deleteAllObjects {
-    
+- (void) deleteAllObjects
+{
     NSFetchRequest* request = [[NSFetchRequest alloc] init];
     
     NSEntityDescription* description =
@@ -245,65 +224,69 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
         [self.managedObjectContext deleteObject:object];
     }
     [self.managedObjectContext save:nil];
+    
+    [self.tableView reloadData];
+    
+    [[[UIAlertView alloc] initWithTitle:@"Deleting..."
+                                message:@"Data been deleted."
+                               delegate:self
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil, nil] show];
+    [self printDB];
 }
 
 #pragma mark - UITableViewDataSource Methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.twitterFeed.count;
+    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription* description = [NSEntityDescription entityForName:@"ASFollowing"
+                                                   inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:description];
+    
+    NSError* requestError = nil;
+    NSArray* resultArray = [self.managedObjectContext executeFetchRequest:request error:&requestError];
+    if (requestError) {
+        NSLog(@"%@", [requestError localizedDescription]);
+    }
+    
+    NSLog(@"resultArray.count = %zd", resultArray.count);
+    
+    return resultArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* identifier = @"cell";
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
-    // UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-    
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-    }
-    
-    NSDictionary* JSONresponse = self.twitterFeed[indexPath.row];
-    
-    // Name
-    
-    NSString* name = [NSString stringWithFormat:@"%@", JSONresponse[@"screen_name"]];
-    
-    cell.textLabel.text = name;
-    
-    // Image
-    
-    NSURL* url = [NSURL URLWithString:[JSONresponse objectForKey:@"profile_image_url"]];
-    
-    if (JSONresponse)
-     {
-        cell.imageView.image = [UIImage imageNamed:@"user.png"];
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        dispatch_async(queue, ^(void) {
-            
-            NSData *imageData = [NSData dataWithContentsOfURL:url];
-            
-            UIImage* image = [[UIImage alloc] initWithData:imageData];
-            if (image) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-
-                    cell.imageView.image = image;
-                    [cell setNeedsLayout];
-                });
-            }
-        });
-     }
-    
-    // Followers count
-    
-    NSString* numberFollowing = [NSString stringWithFormat:@"%@", JSONresponse[@"followers_count"]];
-    
-    cell.detailTextLabel.text = numberFollowing;
+    [self configureCell:cell atIndexPath:indexPath];
     
     return cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    ASFollowing* following = [self.fetchedResultsController objectAtIndexPath:indexPath];
+ 
+    cell.textLabel.text = following.name;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", following.followersCount];
+    
+    cell.imageView.image = [UIImage imageNamed:@"user.png"];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    dispatch_async(queue, ^(void) {
+        
+        UIImage* image = [[UIImage alloc] initWithData:following.profileImage];
+        if (image) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                cell.imageView.image = image;
+                [cell setNeedsLayout];
+            });
+        }
+    });
+    
 }
 
 #pragma mark - UITableViewDelegate Methods

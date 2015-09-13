@@ -11,8 +11,14 @@
 
 @interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
 
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
 @property (strong, nonatomic) NSMutableArray* twitterFeed;
+@property (strong, nonatomic) NSString* login;
+@property (strong, nonatomic) NSString* password;
+
+@property (strong, nonatomic) ViewController* viewController;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
