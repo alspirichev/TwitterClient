@@ -14,6 +14,9 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
+- (IBAction)downloadFollowings:(id)sender;
+- (IBAction)deleteAllObjects:(id)sender;
+
 @property (strong, nonatomic) NSMutableArray* twitterFeed;
 @property (strong, nonatomic) NSString* login;
 @property (strong, nonatomic) NSString* password;

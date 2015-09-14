@@ -9,9 +9,10 @@
 #import "ViewController.h"
 #import <STTwitter/STTwitter.h>
 #import "ASFollowing.h"
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
 
-static NSString* consumerKey = @"KdJCvddEOXJOkRFP7kO9X40Yf";
-static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8YzRWR2";
+static NSString* consumerKey = @"CI6vxpjM68kMGOM2iKNRGAtaK";
+static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1SAnDmTi";
 
 @interface ViewController ()
 
@@ -27,20 +28,7 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
 #pragma mark - View life cycle
 
 - (void)viewDidLoad {
-    
-    
-    UIBarButtonItem* downloadButton = [[UIBarButtonItem alloc] initWithTitle:@"Download"
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(saveToCoreData)];
-    self.navigationItem.leftBarButtonItem = downloadButton;
-    
-    UIBarButtonItem* deleteButton = [[UIBarButtonItem alloc] initWithTitle:@"Delete"
-                                                                     style:UIBarButtonItemStylePlain
-                                                                    target:self
-                                                                    action:@selector(deleteAllObjects)];
-    self.navigationItem.rightBarButtonItem = deleteButton;
-    
+    /*
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     STTwitterAPI* twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:consumerKey
@@ -58,16 +46,64 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     } errorBlock:^(NSError *error) {
         NSLog(@"%@", error.debugDescription);
     }];
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
     [self printDB];
+     */
+    [self obtainABearerToken];
 }
+
+/*
+- (void) viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+        [[ASServerManager sharedManager] authorizeUser:^(ASUser *user) {
+            
+            NSLog(@"AUTHORIZED!");
+            NSLog(@"USER: %@", user.firstName);
+        }];
+}
+*/
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Application-only authentication
+
+-(NSString*) bearerTokenBase64Credentials
+{
+    NSString* bearerToken = [NSString stringWithFormat:@"%@:%@", consumerKey, consumerSecret];
+    NSData* data = [bearerToken dataUsingEncoding:NSUTF8StringEncoding];
+    NSString* bearerTokenBase64 = [data base64EncodedStringWithOptions:0];
+        
+    return bearerTokenBase64;
+}
+
+-(void) obtainABearerToken
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"Basic %@", [self bearerTokenBase64Credentials]]
+                     forHTTPHeaderField:@"Authorization"];
+    
+    [manager.requestSerializer setValue:@"application/x-www-form-urlencoded;charset=UTF-8"
+                     forHTTPHeaderField:@"Content-Type"];
+  
+    
+    [manager POST:@"https://api.twitter.com/oauth2/token"
+       parameters:@{@"grant_type":@"client_credentials"}
+          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+              NSLog(@"JSON: %@", responseObject);
+          }     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              NSLog(@"Error: %@ %ld", error.localizedDescription, operation.response.statusCode);
+          }];
+}
 
 #pragma mark - Work with Core Data
 
@@ -111,7 +147,7 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     return _fetchedResultsController;
 }
 
-- (void)saveContext
+- (void)saveToCoreData
 {
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
@@ -128,58 +164,6 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
                               otherButtonTitles:nil] show];
         }
     }
-}
-
-
--(void) saveToCoreData {
-    
-    for(int i = 0; i < self.twitterFeed.count; i++) {
-        
-        NSDictionary* JSONresponse = self.twitterFeed[i];
-        
-        NSString* name = [NSString stringWithFormat:@"%@", JSONresponse[@"screen_name"]];
-        
-        NSURL* url = [NSURL URLWithString:[JSONresponse objectForKey:@"profile_image_url"]];
-        NSData* imageData = [NSData dataWithContentsOfURL:url];
-        
-        NSString* numberFollowing = [NSString stringWithFormat:@"%@", JSONresponse[@"followers_count"]];
-        NSNumber* followingCount = [NSNumber numberWithInt:[numberFollowing intValue]];
-        
-        ASFollowing* following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
-                                                       inManagedObjectContext:self.managedObjectContext];
-        
-        following.name = name;
-        following.profileImage = imageData;
-        following.followersCount = followingCount;
-        
-        NSError* error = nil;
-        
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"%@", [error localizedDescription]);
-        }
-    }
-    
-    //[self.tableView reloadData];
-    
-    NSMutableArray* newPath = [NSMutableArray array];
-    for(int i = (int)[self.twitterFeed count]; i ; )
-     {
-        
-     }
-    
-    [self.tableView beginUpdates];
-    
-    
-    
-    [self.tableView endUpdates];
-    
-    [self printDB];
-    
-    [[[UIAlertView alloc] initWithTitle:@"Saveing..."
-                               message:@"Data been saved."
-                              delegate:self
-                     cancelButtonTitle:@"OK"
-                     otherButtonTitles:nil, nil] show];
 }
 
 -(void) printDB
@@ -204,7 +188,62 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
     
 }
 
-- (void) deleteAllObjects
+#pragma mark - Actions
+
+- (IBAction)downloadFollowings:(id)sender
+{
+    for(int i = 0; i < self.twitterFeed.count; i++) {
+        
+        NSDictionary* JSONresponse = self.twitterFeed[i];
+        
+        NSString* name = [NSString stringWithFormat:@"%@", JSONresponse[@"screen_name"]];
+        
+        NSURL* url = [NSURL URLWithString:[JSONresponse objectForKey:@"profile_image_url"]];
+        NSData* imageData = [NSData dataWithContentsOfURL:url];
+        
+        NSString* numberFollowing = [NSString stringWithFormat:@"%@", JSONresponse[@"followers_count"]];
+        NSNumber* followingCount = [NSNumber numberWithInt:[numberFollowing intValue]];
+        
+        ASFollowing* following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
+                                                               inManagedObjectContext:self.managedObjectContext];
+        
+        following.name = name;
+        following.profileImage = imageData;
+        following.followersCount = followingCount;
+        
+        NSError* error = nil;
+        
+        if (![self.managedObjectContext save:&error]) {
+            NSLog(@"%@", [error localizedDescription]);
+        }
+    }
+    
+    [self.tableView reloadData];
+    /*
+    NSMutableArray* newPath = [NSMutableArray array];
+    for(int i = (int)[self.twitterFeed count]; i ; )
+     {
+        
+     }
+    
+    [self.tableView beginUpdates];
+    
+    
+    
+    [self.tableView endUpdates];
+    
+    [self printDB];
+    
+    [[[UIAlertView alloc] initWithTitle:@"Saveing..."
+                                message:@"Data been saved."
+                               delegate:self
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil, nil] show];
+    */
+}
+
+
+- (IBAction)deleteAllObjects:(id)sender
 {
     NSFetchRequest* request = [[NSFetchRequest alloc] init];
     
@@ -354,6 +393,11 @@ static NSString* consumerSecret = @"RRU9qr880t2Tn0ZNmDY7cC7RavTvT2hSYo5aG06LsSv8
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+-(void) saveContext
+{
+    
 }
 
 @end

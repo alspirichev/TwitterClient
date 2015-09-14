@@ -163,7 +163,18 @@
                             <constraint firstItem="Muj-By-pn3" firstAttribute="leading" secondItem="Kwf-38-uLQ" secondAttribute="leadingMargin" constant="-16" id="xrE-Ey-5JT"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Ddv-w0-jDR"/>
+                    <navigationItem key="navigationItem" id="Ddv-w0-jDR">
+                        <barButtonItem key="leftBarButtonItem" systemItem="save" id="fJg-o4-eHU">
+                            <connections>
+                                <action selector="downloadFollowings:" destination="6Yh-xQ-Q7Q" id="A6e-uj-TVX"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="jFq-Rx-y3q">
+                            <connections>
+                                <action selector="deleteAllObjects:" destination="6Yh-xQ-Q7Q" id="qRk-bI-7io"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="Muj-By-pn3" id="Th3-o0-GqU"/>
                     </connections>
