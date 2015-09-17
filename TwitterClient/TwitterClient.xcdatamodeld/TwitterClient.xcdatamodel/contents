@@ -3,9 +3,9 @@
     <entity name="ASFollowing" representedClassName="ASFollowing" syncable="YES">
         <attribute name="followersCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="profileImage" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="profileImage" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ASFollowing" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="ASFollowing" positionX="-936" positionY="-18" width="128" height="88"/>
     </elements>
 </model>

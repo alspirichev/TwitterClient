@@ -19,7 +19,7 @@
 		CD74B4F31B91CA7000640993 /* TwitterClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4F21B91CA7000640993 /* TwitterClientTests.m */; };
 		CD74B4FE1B91CC9600640993 /* ASFollowing.m in Sources */ = {isa = PBXBuildFile; fileRef = CD74B4FD1B91CC9600640993 /* ASFollowing.m */; };
 		CDB2DDCC1B97997B00796487 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB2DDCB1B97997A00796487 /* Twitter.framework */; };
-		CDE7ACD71B9E097E00AEC894 /* ASSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE7ACD61B9E097E00AEC894 /* ASSignInViewController.m */; };
+		CDE7ACD71B9E097E00AEC894 /* ASLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE7ACD61B9E097E00AEC894 /* ASLoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,8 +53,8 @@
 		CD74B4FC1B91CC9600640993 /* ASFollowing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASFollowing.h; sourceTree = "<group>"; };
 		CD74B4FD1B91CC9600640993 /* ASFollowing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASFollowing.m; sourceTree = "<group>"; };
 		CDB2DDCB1B97997A00796487 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		CDE7ACD51B9E097E00AEC894 /* ASSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASSignInViewController.h; sourceTree = "<group>"; };
-		CDE7ACD61B9E097E00AEC894 /* ASSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASSignInViewController.m; sourceTree = "<group>"; };
+		CDE7ACD51B9E097E00AEC894 /* ASLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASLoginViewController.h; sourceTree = "<group>"; };
+		CDE7ACD61B9E097E00AEC894 /* ASLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASLoginViewController.m; sourceTree = "<group>"; };
 		F6053182170FA20FF9C0B085 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,8 +170,8 @@
 		CDE7ACD11B9E06EA00AEC894 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CDE7ACD51B9E097E00AEC894 /* ASSignInViewController.h */,
-				CDE7ACD61B9E097E00AEC894 /* ASSignInViewController.m */,
+				CDE7ACD51B9E097E00AEC894 /* ASLoginViewController.h */,
+				CDE7ACD61B9E097E00AEC894 /* ASLoginViewController.m */,
 				CD74B4DD1B91CA7000640993 /* ViewController.h */,
 				CD74B4DE1B91CA7000640993 /* ViewController.m */,
 			);
@@ -334,7 +334,7 @@
 			files = (
 				CD74B4DC1B91CA7000640993 /* TwitterClient.xcdatamodeld in Sources */,
 				CD74B4D91B91CA6F00640993 /* AppDelegate.m in Sources */,
-				CDE7ACD71B9E097E00AEC894 /* ASSignInViewController.m in Sources */,
+				CDE7ACD71B9E097E00AEC894 /* ASLoginViewController.m in Sources */,
 				CD74B4DF1B91CA7000640993 /* ViewController.m in Sources */,
 				CD74B4D61B91CA6F00640993 /* main.m in Sources */,
 				CD74B4FE1B91CC9600640993 /* ASFollowing.m in Sources */,

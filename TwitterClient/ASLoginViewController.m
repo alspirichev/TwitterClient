@@ -6,17 +6,21 @@
 //
 //
 
-#import "ASSignInViewController.h"
+#import "ASLoginViewController.h"
 #import "ViewController.h"
 
-@interface ASSignInViewController ()
+@interface ASLoginViewController ()
 
 @end
 
-@implementation ASSignInViewController
+@implementation ASLoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.twitter.com/oauth2/token"]];
+    
+   [self.webView loadRequest:request]; 
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,15 +28,22 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)actionButton:(id)sender {
-    
-    if ([self.loginField.text isEqualToString:@""] || [self.passwordField.text isEqualToString:@""]) {
+#pragma mark - Action
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if (![self.loginField.text isEqualToString:@""]) {
+        return YES;
+    } else {
         [[[UIAlertView alloc] initWithTitle:@"Error!"
-                                    message:@"Login or Password is empty."
+                                    message:@"Login is empty."
                                    delegate:self
                           cancelButtonTitle:@"OK"
                           otherButtonTitles:nil, nil] show];
+        return NO;
     }
+   
+    return NO;
 }
 
 #pragma mark - Navigation
@@ -45,8 +56,8 @@
         
         ViewController* vc = (ViewController* ) nav.topViewController;
         
-        vc.login = self.loginField.text;
-        vc.password = self.passwordField.text;
+        vc.screenName = self.loginField.text;
+
     }
 }
 
@@ -54,26 +65,13 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if ([textField isEqual:self.loginField]) {
-        
         if ([self.loginField.text isEqualToString:@""]) {
             self.loginLabel.text = [NSString stringWithFormat:@"Login is empty."];
         } else {
             self.loginLabel.text = nil;
         }
-        
-        [self.passwordField becomeFirstResponder];
-        
-    } else {
-        
-        if ([self.passwordField.text isEqualToString:@""]) {
-            self.passwordLabel.text = [NSString stringWithFormat:@"Password is empty."];
-        } else {
-            self.passwordLabel.text = nil;
-        }
-        
-        [textField resignFirstResponder];
-    }
+    
+    [self.loginField resignFirstResponder];
     
     return  YES;
 }

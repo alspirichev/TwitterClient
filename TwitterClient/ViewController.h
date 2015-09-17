@@ -9,19 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
-
-
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
 
 - (IBAction)downloadFollowings:(id)sender;
 - (IBAction)deleteAllObjects:(id)sender;
 
 @property (strong, nonatomic) NSMutableArray* twitterFeed;
-@property (strong, nonatomic) NSString* login;
-@property (strong, nonatomic) NSString* password;
-
 @property (strong, nonatomic) ViewController* viewController;
+@property (strong, nonatomic) NSString* screenName;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 

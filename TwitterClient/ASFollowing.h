@@ -14,6 +14,6 @@
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * followersCount;
-@property (nonatomic, retain) NSData * profileImage;
+@property (nonatomic, retain) NSString * profileImage;
 
 @end

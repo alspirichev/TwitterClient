@@ -8,15 +8,19 @@
 
 #import "ViewController.h"
 #import <STTwitter/STTwitter.h>
+#import <STTwitterAppOnly.h>
 #import "ASFollowing.h"
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 
-static NSString* consumerKey = @"CI6vxpjM68kMGOM2iKNRGAtaK";
-static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1SAnDmTi";
-
 @interface ViewController ()
 
+@property (strong, nonatomic) NSString* bearerToken;
+@property (strong, nonatomic) STTwitterAPI* twitter;
+
 @end
+
+static NSString* consumerKey = @"CI6vxpjM68kMGOM2iKNRGAtaK";
+static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1SAnDmTi";
 
 @implementation ViewController
 
@@ -28,44 +32,24 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
 #pragma mark - View life cycle
 
 - (void)viewDidLoad {
-    /*
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    STTwitterAPI* twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:consumerKey
-                                                            consumerSecret:consumerSecret];
-    [twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
-        
-        [twitter setUserID:[NSString stringWithFormat:@"3419763023"]];
-        
-        [twitter getFriendsForScreenName:@"alspirichev" successBlock:^(NSArray *friends) {
-            self.twitterFeed = [NSMutableArray arrayWithArray:friends];
-            [self.tableView reloadData];
-        } errorBlock:^(NSError *error) {
-            NSLog(@"Error: %@", error.debugDescription);
-        }];
-    } errorBlock:^(NSError *error) {
-        NSLog(@"%@", error.debugDescription);
-    }];
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-    [self printDB];
-     */
     [self obtainABearerToken];
-}
+    
+    UIRefreshControl* refresh = [[UIRefreshControl alloc] init];
+    
+    [refresh addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refresh;
 
-/*
-- (void) viewDidAppear:(BOOL)animated {
-    
-    [super viewDidAppear:animated];
-    
-        [[ASServerManager sharedManager] authorizeUser:^(ASUser *user) {
-            
-            NSLog(@"AUTHORIZED!");
-            NSLog(@"USER: %@", user.firstName);
-        }];
+   [self.twitter getUserTimelineWithScreenName:self.screenName
+                                        count:20
+                                 successBlock:^(NSArray *statuses) {
+                                        NSLog(@"%@", statuses);
+                                        self.twitterFeed = [NSMutableArray arrayWithArray:statuses];
+                                        [self.tableView reloadData];
+                                 } errorBlock:^(NSError *error) {
+                                           NSLog(@"errorBlock %@", error.localizedDescription);
+                                 }];
 }
-*/
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -86,6 +70,8 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
 -(void) obtainABearerToken
 {
     AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates = YES;
+       
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     
@@ -99,10 +85,13 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
     [manager POST:@"https://api.twitter.com/oauth2/token"
        parameters:@{@"grant_type":@"client_credentials"}
           success:^(AFHTTPRequestOperation *operation, id responseObject) {
-              NSLog(@"JSON: %@", responseObject);
+              
+              self.bearerToken = [responseObject objectForKey:@"access_token"];
+              
           }     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
               NSLog(@"Error: %@ %ld", error.localizedDescription, operation.response.statusCode);
           }];
+    
 }
 
 #pragma mark - Work with Core Data
@@ -196,19 +185,18 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
         
         NSDictionary* JSONresponse = self.twitterFeed[i];
         
-        NSString* name = [NSString stringWithFormat:@"%@", JSONresponse[@"screen_name"]];
+        NSString* name = JSONresponse[@"screen_name"];
         
-        NSURL* url = [NSURL URLWithString:[JSONresponse objectForKey:@"profile_image_url"]];
-        NSData* imageData = [NSData dataWithContentsOfURL:url];
+        NSString* imageURL = JSONresponse[@"profile_image_url"];
         
-        NSString* numberFollowing = [NSString stringWithFormat:@"%@", JSONresponse[@"followers_count"]];
+        NSString* numberFollowing = JSONresponse[@"followers_count"];
         NSNumber* followingCount = [NSNumber numberWithInt:[numberFollowing intValue]];
         
         ASFollowing* following = [NSEntityDescription insertNewObjectForEntityForName:@"ASFollowing"
                                                                inManagedObjectContext:self.managedObjectContext];
         
         following.name = name;
-        following.profileImage = imageData;
+        following.profileImage = imageURL;
         following.followersCount = followingCount;
         
         NSError* error = nil;
@@ -219,18 +207,16 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
     }
     
     [self.tableView reloadData];
+    
     /*
-    NSMutableArray* newPath = [NSMutableArray array];
-    for(int i = (int)[self.twitterFeed count]; i ; )
-     {
-        
+     NSMutableArray* newPaths = [NSMutableArray array];
+     for (int i = 0; i < [self.twitterFeed count]; i++) {
+         [newPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
      }
-    
-    [self.tableView beginUpdates];
-    
-    
-    
-    [self.tableView endUpdates];
+     
+     [self.tableView beginUpdates];
+     [self.tableView insertRowsAtIndexPaths:newPaths withRowAnimation:UITableViewRowAnimationTop];
+     [self.tableView endUpdates];
     
     [self printDB];
     
@@ -240,6 +226,7 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
                       cancelButtonTitle:@"OK"
                       otherButtonTitles:nil, nil] show];
     */
+    
 }
 
 
@@ -274,32 +261,96 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
     [self printDB];
 }
 
+- (void) refreshTable
+{
+    [self.twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
+        
+        
+        [self.twitter getFriendsForScreenName:self.screenName successBlock:^(NSArray *friends) {
+            self.twitterFeed = [NSMutableArray arrayWithArray:friends];
+            
+            [self.tableView reloadData];
+            
+            [self.refreshControl endRefreshing];
+            
+        } errorBlock:^(NSError *error) {
+            NSLog(@"Error: %@", error.debugDescription);
+        }];
+    } errorBlock:^(NSError *error) {
+        NSLog(@"%@", error.debugDescription);
+        [self.refreshControl endRefreshing];
+    }];
+
+}
+
 #pragma mark - UITableViewDataSource Methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+//    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+//    
+//    NSEntityDescription* description = [NSEntityDescription entityForName:@"ASFollowing"
+//                                                   inManagedObjectContext:self.managedObjectContext];
+//    [request setEntity:description];
+//    
+//    NSError* requestError = nil;
+//    NSArray* resultArray = [self.managedObjectContext executeFetchRequest:request error:&requestError];
+//    if (requestError) {
+//        NSLog(@"%@", [requestError localizedDescription]);
+//    }
+//    
+//    NSLog(@"resultArray.count = %zd", resultArray.count);
+//    
+//    return resultArray.count;
     
-    NSEntityDescription* description = [NSEntityDescription entityForName:@"ASFollowing"
-                                                   inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:description];
-    
-    NSError* requestError = nil;
-    NSArray* resultArray = [self.managedObjectContext executeFetchRequest:request error:&requestError];
-    if (requestError) {
-        NSLog(@"%@", [requestError localizedDescription]);
-    }
-    
-    NSLog(@"resultArray.count = %zd", resultArray.count);
-    
-    return resultArray.count;
+    return self.twitterFeed.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
-    [self configureCell:cell atIndexPath:indexPath];
+    //[self configureCell:cell atIndexPath:indexPath];
+    
+    NSDictionary* JSONresponse = self.twitterFeed[indexPath.row];
+    
+    // Name
+    
+    NSString* name = [NSString stringWithFormat:@"%@", JSONresponse[@"text"]];
+    NSLog(@"-------------------------------------------------------------------------------\n");
+    NSLog(@"%@", JSONresponse);
+    cell.textLabel.text = name;
+    
+    // Image
+    
+    NSDictionary* tmp = [JSONresponse objectForKey:@"user"];
+    NSURL* url = [NSURL URLWithString:[tmp objectForKey:@"profile_image_url"]];
+    
+    if (JSONresponse)
+     {
+        cell.imageView.image = [UIImage imageNamed:@"user.png"];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^(void) {
+            
+            NSData *imageData = [NSData dataWithContentsOfURL:url];
+            
+            UIImage* image = [[UIImage alloc] initWithData:imageData];
+            if (image) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    cell.imageView.image = image;
+                    [cell setNeedsLayout];
+                });
+            }
+        });
+     }
+    
+    // Followers count
+    
+    NSString* numberFollowing = [NSString stringWithFormat:@"%@", tmp[@"followers_count"]];
+    
+    cell.detailTextLabel.text = numberFollowing;
     
     return cell;
 }
@@ -316,7 +367,7 @@ static NSString* consumerSecret = @"8jmQNNse1Hdg8Vu1tam5fXJFJa6I13Tv21NmG2B64Q1S
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
     dispatch_async(queue, ^(void) {
         
-        UIImage* image = [[UIImage alloc] initWithData:following.profileImage];
+        UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:[NSURL URLWithString:following.profileImage]]];
         if (image) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
