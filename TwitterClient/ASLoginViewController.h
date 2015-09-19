@@ -1,18 +1,14 @@
 //
-//  ASSignInViewController.h
-//  
+//  ASLoginViewController.h
+//  TwitterClient
 //
-//  Created by Alexander Spirichev on 07.09.15.
-//
+//  Created by Alexander Spirichev on 17.09.15.
+//  Copyright (c) 2015 Alexander Spirichev. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ASLoginViewController : UIViewController <UITextFieldDelegate>
-
-
-@property (weak, nonatomic) IBOutlet UITextField *loginField;
-@property (weak, nonatomic) IBOutlet UILabel *loginLabel;
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@interface ASLoginViewController : UIViewController
 
 @end
+

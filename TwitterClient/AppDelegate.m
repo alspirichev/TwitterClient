@@ -7,7 +7,10 @@
 //
 
 #import "AppDelegate.h"
-
+#import "ASLoginViewController.h"
+#import "ASTweetsViewController.h"
+#import "ASServerManager.h"
+#import "ASUser.h"
 
 @interface AppDelegate ()
 
@@ -17,7 +20,44 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        
+    UINavigationController* nvc;
+    
+    ASUser *user = [ASUser currentUser];
+    if (user != nil) {
+        NSLog(@"Welcome %@", user.name);
+        
+        ASTweetsViewController *tvc = [[ASTweetsViewController alloc] initWithHomeTimeline];
+        nvc = [[UINavigationController alloc] initWithRootViewController:tvc];
+        
+        self.window.rootViewController = tvc;
+    } else {
+        NSLog(@"Not logged in");
+        
+        ASLoginViewController *lvc = [[ASLoginViewController alloc] init];
+        self.window.rootViewController = lvc;
+    }
+    
+    [self.window makeKeyAndVisible];
+    
+    [[UINavigationBar appearance] setBarTintColor:[[UIColor alloc] initWithRed:85/255.0 green:172/255.0 blue:238/255.0 alpha:1.0]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTranslucent:NO];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      [UIColor whiteColor], NSForegroundColorAttributeName, nil]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    [[ASServerManager sharedManager] openURL:url];
+    
     return YES;
 }
 
@@ -44,4 +84,3 @@
 }
 
 @end
-

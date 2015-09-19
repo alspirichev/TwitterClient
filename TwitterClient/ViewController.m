@@ -10,6 +10,8 @@
 #import <STTwitter/STTwitter.h>
 #import <STTwitterAppOnly.h>
 #import "ASFollowing.h"
+#import "ASServerManager.h"
+#import "ASUser.h"
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 
 @interface ViewController ()
