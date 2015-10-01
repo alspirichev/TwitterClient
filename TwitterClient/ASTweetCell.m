@@ -35,18 +35,30 @@
     self.tweetLabel.text = tweet.text;
     
     [self setRetweetsNumber];
+    [self setFavoritesCount];
     self.favoritesButton.selected = tweet.favorited;
     
     NSDate *timeAgoDate = [NSDate dateWithTimeIntervalSinceNow:tweet.createdAt.timeIntervalSinceNow];
     self.dateTweetLabel.text = timeAgoDate.shortTimeAgoSinceNow;
 }
 
-- (void)setRetweetsNumber {
+- (void)setRetweetsNumber
+{
     NSInteger numRetweets = self.tweet.retweetsCount;
     if (numRetweets > 0) {
         self.retweetLabel.text = [NSString stringWithFormat:@"%zd", numRetweets];
     } else {
         self.retweetLabel.text = @"";
+    }
+}
+
+-(void) setFavoritesCount
+{
+    NSInteger numFavorites = self.tweet.favoritesCount;
+    if (numFavorites > 0) {
+        self.favoritesLabel.text = [NSString stringWithFormat:@"%zd", numFavorites];
+    } else {
+        self.favoritesLabel.text = @"";
     }
 }
 

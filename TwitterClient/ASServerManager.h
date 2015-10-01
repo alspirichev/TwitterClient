@@ -20,4 +20,6 @@
 - (void)homeTimelineWithParams:(NSDictionary *)params completion:(void (^)(NSMutableArray *tweets, NSError *error))completion;
 - (void)mentionsTimelineWithParams:(NSDictionary *)params completion:(void (^)(NSMutableArray *, NSError *))completion;
 
+-(void) userTimelineWithParams:(NSDictionary* )params completion:(void (^)(NSMutableArray *tweets, NSError *error))completion;
+
 @end

@@ -43,7 +43,7 @@ NSString * const kTwitterBaseUrl =          @"https://api.twitter.com";
     
     [self.requestSerializer removeAccessToken];
     [self fetchRequestTokenWithPath:@"oauth/request_token"
-                             method:@"GET"
+                             method:@"POST"
                         callbackURL:[NSURL URLWithString:@"alspirichev://oauth"]
                               scope:nil
                             success:^(BDBOAuth1Credential *requestToken) {
@@ -54,14 +54,15 @@ NSString * const kTwitterBaseUrl =          @"https://api.twitter.com";
                                                                                                                                 requestToken.token]];
                                 [[UIApplication sharedApplication] openURL:authURL];
                                 
-                                
                             } failure:^(NSError *error) {
                                 NSLog(@"failed to get request token");
+                                NSLog(@"Error: %@", error.localizedDescription);
                                 self.loginCompletion(nil, error);
                             }];
 }
 
 - (void)openURL:(NSURL *)url {
+    
     [self fetchAccessTokenWithPath:@"oauth/access_token"
                             method:@"POST"
                       requestToken:[BDBOAuth1Credential credentialWithQueryString:url.query]
@@ -75,7 +76,7 @@ NSString * const kTwitterBaseUrl =          @"https://api.twitter.com";
        parameters:nil
           success:^(AFHTTPRequestOperation *operation, id responseObject) {
               
-            NSLog(@"current user: %@", responseObject);
+            NSLog(@"current user (JSON): %@", responseObject);
               
             ASUser *user = [[ASUser alloc] initWithDictionary:responseObject];
             [ASUser setCurrentUser:user];
@@ -85,13 +86,14 @@ NSString * const kTwitterBaseUrl =          @"https://api.twitter.com";
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"failed getting current user");
+            NSLog(@"Error: %@", error.localizedDescription);
             self.loginCompletion(nil, error);
         }];
         
     } failure:^(NSError *error) {
         NSLog(@"failed to get the access token!");
+        NSLog(@"Error: %@", error.localizedDescription);
     }];
-
 }
 
 #pragma mark - API Requests
@@ -106,21 +108,37 @@ NSString * const kTwitterBaseUrl =          @"https://api.twitter.com";
         completion(tweets, nil);
           
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
+        NSLog(@"Error %@", error.localizedDescription);
         completion(nil, error);
     }];
 }
 
 - (void)mentionsTimelineWithParams:(NSDictionary *)params completion:(void (^)(NSMutableArray *, NSError *))completion
 {
-    [self GET:@"1.1/statuses/mentions_timeline.json" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [self GET:@"1.1/statuses/mentions_timeline.json"
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          
         NSMutableArray *tweets = [ASTweet tweetsWithArray:responseObject];
         completion(tweets, nil);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
+        NSLog(@"%@", error.localizedDescription);
         completion(nil, error);
     }];
+}
+
+-(void) userTimelineWithParams:(NSDictionary* )params completion:(void (^)(NSMutableArray *tweets, NSError *error))completion
+{
+    [self GET:@"1.1/statuses/user_timeline.json"
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSMutableArray *tweets = [ASTweet tweetsWithArray:responseObject];
+          completion(tweets, nil);
+      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"%@", error.localizedDescription);
+          completion(nil, error);
+      }];
 }
 
 @end

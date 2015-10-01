@@ -4,9 +4,9 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ASTweetsViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ASProfileViewController">
             <connections>
-                <outlet property="tableView" destination="e2Q-kU-l6Y" id="Jn3-Dh-lNT"/>
+                <outlet property="tableView" destination="tRP-1i-7sS" id="V57-5S-RUB"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -15,19 +15,19 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="e2Q-kU-l6Y">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="tRP-1i-7sS">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="e2Q-kU-l6Y" secondAttribute="trailing" id="1qb-Xo-3zc"/>
-                <constraint firstItem="e2Q-kU-l6Y" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="UW4-H7-HbS"/>
-                <constraint firstItem="e2Q-kU-l6Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Uqv-p6-icX"/>
-                <constraint firstAttribute="bottom" secondItem="e2Q-kU-l6Y" secondAttribute="bottom" id="yNB-Bt-l4n"/>
+                <constraint firstAttribute="trailing" secondItem="tRP-1i-7sS" secondAttribute="trailing" id="0l7-cx-V1n"/>
+                <constraint firstItem="tRP-1i-7sS" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="VYA-8d-OhA"/>
+                <constraint firstItem="tRP-1i-7sS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="aVJ-Cw-kny"/>
+                <constraint firstAttribute="bottom" secondItem="tRP-1i-7sS" secondAttribute="bottom" id="dJN-bq-4mb"/>
             </constraints>
-            <point key="canvasLocation" x="514" y="170"/>
+            <point key="canvasLocation" x="378" y="385"/>
         </view>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

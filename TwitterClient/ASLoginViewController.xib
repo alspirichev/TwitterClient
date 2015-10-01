@@ -10,7 +10,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="3xD-Me-tON">
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="3xD-Me-tON">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -41,7 +41,7 @@
                 <constraint firstItem="xB7-dw-fa5" firstAttribute="top" secondItem="QWs-dn-BpI" secondAttribute="bottom" constant="108" id="lkk-Vb-JIL"/>
                 <constraint firstItem="QWs-dn-BpI" firstAttribute="centerX" secondItem="xB7-dw-fa5" secondAttribute="centerX" id="oBu-PX-rcZ"/>
             </constraints>
-            <point key="canvasLocation" x="947" y="396"/>
+            <point key="canvasLocation" x="919" y="412"/>
         </view>
     </objects>
     <resources>

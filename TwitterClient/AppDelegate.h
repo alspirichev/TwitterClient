@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#include <RESideMenu.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

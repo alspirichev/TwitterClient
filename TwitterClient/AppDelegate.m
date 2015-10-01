@@ -12,6 +12,9 @@
 #import "ASServerManager.h"
 #import "ASUser.h"
 
+#import "ASLeftMenuViewController.h"
+#import "ASRightMenuViewController.h"
+
 @interface AppDelegate ()
 
 @end
@@ -21,18 +24,45 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidLogout)
+                                                 name:UserDidLogoutNotification
+                                               object:nil];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-    UINavigationController* nvc;
+    
+    UIColor* tintColor = [UIColor colorWithRed:85/255.0 green:172/255.0 blue:238/255.0 alpha:1.0];
+    
+    UINavigationController *nvc = nil;
+    RESideMenu *sideMenuViewController = nil;
     
     ASUser *user = [ASUser currentUser];
+    
     if (user != nil) {
         NSLog(@"Welcome %@", user.name);
         
         ASTweetsViewController *tvc = [[ASTweetsViewController alloc] initWithHomeTimeline];
         nvc = [[UINavigationController alloc] initWithRootViewController:tvc];
         
-        self.window.rootViewController = tvc;
+        ASLeftMenuViewController *leftMenuViewController = [[ASLeftMenuViewController alloc] init];
+        ASRightMenuViewController *rightMenuViewController = [[ASRightMenuViewController alloc] init];
+        
+        sideMenuViewController = [[RESideMenu alloc] initWithContentViewController:nvc
+                                                            leftMenuViewController:leftMenuViewController
+                                                           rightMenuViewController:rightMenuViewController];
+        
+        // setup Side Menu
+        
+        sideMenuViewController.backgroundImage = [UIImage imageNamed:@"Stars"];
+        sideMenuViewController.menuPreferredStatusBarStyle = UIStatusBarStyleLightContent;
+        sideMenuViewController.contentViewShadowColor = tintColor;
+        sideMenuViewController.contentViewShadowOffset = CGSizeMake(0, 0);
+        sideMenuViewController.contentViewShadowOpacity = 0.6;
+        sideMenuViewController.contentViewShadowRadius = 100;
+        sideMenuViewController.contentViewShadowEnabled = YES;
+        
+        self.window.rootViewController = sideMenuViewController;
+
     } else {
         NSLog(@"Not logged in");
         
@@ -42,17 +72,35 @@
     
     [self.window makeKeyAndVisible];
     
-    [[UINavigationBar appearance] setBarTintColor:[[UIColor alloc] initWithRed:85/255.0 green:172/255.0 blue:238/255.0 alpha:1.0]];
+    // setup Navigation Bar
+    
+    [[UINavigationBar appearance] setBarTintColor:tintColor];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTranslucent:NO];
-    
     [[UINavigationBar appearance] setTitleTextAttributes:
      [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor whiteColor], NSForegroundColorAttributeName, nil]];
+     [UIColor whiteColor], NSForegroundColorAttributeName, nil]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-
+    
     return YES;
 }
+
+-(void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Notification
+
+- (void)userDidLogout {
+    [UIView transitionWithView:self.window
+                      duration:0.5
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{ self.window.rootViewController = [[ASLoginViewController alloc] init]; }
+                    completion:nil];
+}
+
+#pragma mark - AppDelegate Methods
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {

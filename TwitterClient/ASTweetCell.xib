@@ -127,7 +127,7 @@
                 <outlet property="retweetLabel" destination="bcm-OJ-Ljw" id="nso-cl-6eS"/>
                 <outlet property="tweetLabel" destination="ymV-1y-NCQ" id="7iZ-kI-rMS"/>
             </connections>
-            <point key="canvasLocation" x="551" y="427"/>
+            <point key="canvasLocation" x="358" y="298"/>
         </tableViewCell>
     </objects>
     <resources>

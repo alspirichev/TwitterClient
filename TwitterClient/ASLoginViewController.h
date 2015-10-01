@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <RESideMenu.h>
 
 @interface ASLoginViewController : UIViewController
 
 @end
-

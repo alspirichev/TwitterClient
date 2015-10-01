@@ -10,32 +10,53 @@
 #import "ASServerManager.h"
 #import "ASTweetsViewController.h"
 
+#include <RESideMenu.h>
+#import "ASLeftMenuViewController.h"
+#import "ASRightMenuViewController.h"
+
 @implementation ASLoginViewController
 
+#pragma mark - View Controller life style
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Actions
 
-- (IBAction)onLogin:(id)sender
-{
+- (IBAction)onLogin:(id)sender {
     [[ASServerManager sharedManager] loginWithCompletion:^(ASUser *user, NSError *error) {
         if (user != nil) {
-
-            NSLog(@"welcome to %@", user.name);
+            
+            NSLog(@"Welcome to %@", user.name);
+            
+            ASLeftMenuViewController *leftMenuViewController = [[ASLeftMenuViewController alloc] init];
+            ASRightMenuViewController *rightMenuViewController = [[ASRightMenuViewController alloc] init];
             
             ASTweetsViewController *tvc = [[ASTweetsViewController alloc] initWithHomeTimeline];
             UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:tvc];
-            [self presentViewController:nvc animated:YES completion:nil];
+            
+            RESideMenu *sideMenuViewController = [[RESideMenu alloc] initWithContentViewController:nvc
+                                                                            leftMenuViewController:leftMenuViewController
+                                                                           rightMenuViewController:rightMenuViewController];
+            // setup Side Menu
+            
+            sideMenuViewController.backgroundImage = [UIImage imageNamed:@"Stars"];
+            sideMenuViewController.menuPreferredStatusBarStyle = UIStatusBarStyleLightContent;
+            sideMenuViewController.contentViewShadowColor = [UIColor colorWithRed:85/255.0 green:172/255.0 blue:238/255.0 alpha:1.0];
+            sideMenuViewController.contentViewShadowOffset = CGSizeMake(0, 0);
+            sideMenuViewController.contentViewShadowOpacity = 0.6;
+            sideMenuViewController.contentViewShadowRadius = 100;
+            sideMenuViewController.contentViewShadowEnabled = YES;
+            
+            [self presentViewController:sideMenuViewController animated:YES completion:nil];
         } else {
-            NSLog(@"Error!");
+            NSLog(@"Error: %@", error.localizedDescription);
         }
     }];
 }

@@ -9,6 +9,11 @@
 #import "ASUser.h"
 #import "ASServerManager.h"
 
+NSString * const UserDidLogoutNotification = @"UserDidLogoutNotification";
+
+static ASUser* _currentUser = nil;
+NSString * const kCurrentUserKey = @"kCurrentUserKey";
+
 @interface ASUser()
 
 @property (strong, nonatomic) NSDictionary* dictionary;
@@ -17,11 +22,25 @@
 
 @implementation ASUser
 
-static ASUser* _currentUser = nil;
-NSString * const kCurrentUserKey = @"kCurrentUserKey";
+- (id)initWithDictionary:(NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        self.dictionary = dictionary;
+        self.name = dictionary[@"name"];
+        self.screenName = dictionary[@"screen_name"];
+        self.profileImageUrl = dictionary[@"profile_image_url"];
+        self.tagline = dictionary[@"description"];
+        self.profileBackgroundImageUrl = dictionary[@"profile_banner_url"];
+        self.numberTweets = [dictionary[@"statuses_count"] integerValue];
+        self.numberFollowers = [dictionary[@"followers_count"] integerValue];
+        self.numberFollowing = [dictionary[@"friends_count"] integerValue];
+    }
+    return self;
+}
 
 + (ASUser *)currentUser {
     if (_currentUser == nil) {
+
         NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:kCurrentUserKey];
         if (data != nil) {
             NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -46,20 +65,13 @@ NSString * const kCurrentUserKey = @"kCurrentUserKey";
     
 }
 
-- (id)initWithDictionary:(NSDictionary *)dictionary {
-    self = [super init];
-    if (self) {
-        self.dictionary = dictionary;
-        self.name = dictionary[@"name"];
-        self.screenName = dictionary[@"screen_name"];
-        self.profileImageUrl = dictionary[@"profile_image_url"];
-        self.tagline = dictionary[@"description"];
-        self.profileBackgroundImageUrl = dictionary[@"profile_banner_url"];
-        self.numberTweets = [dictionary[@"statuses_count"] integerValue];
-        self.numberFollowers = [dictionary[@"followers_count"] integerValue];
-        self.numberFollowing = [dictionary[@"friends_count"] integerValue];
-    }
-    return self;
++ (void)logout
+{
+    [ASUser setCurrentUser:nil];
+    [[ASServerManager sharedManager].requestSerializer removeAccessToken];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:UserDidLogoutNotification object:nil];
 }
+
 
 @end
