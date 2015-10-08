@@ -11,7 +11,7 @@
                 <outlet property="placeholderText" destination="Gzl-g5-sGW" id="eBz-i5-oKT"/>
                 <outlet property="textView" destination="8N6-9c-b6i" id="ALR-3k-Dey"/>
                 <outlet property="thumbnailView" destination="nx8-kp-hoz" id="Apf-Rc-IuC"/>
-                <outlet property="view" destination="i5M-Pr-FkT" id="vCT-8S-AHX"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="MCx-8k-evG"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -110,7 +110,7 @@
                 <constraint firstAttribute="bottom" secondItem="jqU-u7-fWT" secondAttribute="bottom" id="rvP-Cf-Irn"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
-            <point key="canvasLocation" x="353" y="460"/>
+            <point key="canvasLocation" x="461" y="382"/>
         </view>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

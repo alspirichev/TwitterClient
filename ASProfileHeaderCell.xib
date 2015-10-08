@@ -102,7 +102,7 @@
                 <outlet property="thumbImageView" destination="MSc-jG-ZBr" id="cf1-Sn-LtG"/>
                 <outlet property="userName" destination="Oc4-BP-3LC" id="MaW-91-AZ4"/>
             </connections>
-            <point key="canvasLocation" x="1054" y="499"/>
+            <point key="canvasLocation" x="610" y="281"/>
         </tableViewCell>
     </objects>
 </document>

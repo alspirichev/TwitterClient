@@ -14,7 +14,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Twitter_logo_white.png" translatesAutoresizingMaskIntoConstraints="NO" id="QWs-dn-BpI">
+                <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Twitter_logo_white" translatesAutoresizingMaskIntoConstraints="NO" id="QWs-dn-BpI">
                     <rect key="frame" x="45" y="88" width="231" height="175"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="175" id="9hj-SZ-ec7"/>
@@ -41,11 +41,11 @@
                 <constraint firstItem="xB7-dw-fa5" firstAttribute="top" secondItem="QWs-dn-BpI" secondAttribute="bottom" constant="108" id="lkk-Vb-JIL"/>
                 <constraint firstItem="QWs-dn-BpI" firstAttribute="centerX" secondItem="xB7-dw-fa5" secondAttribute="centerX" id="oBu-PX-rcZ"/>
             </constraints>
-            <point key="canvasLocation" x="919" y="412"/>
+            <point key="canvasLocation" x="562" y="340"/>
         </view>
     </objects>
     <resources>
-        <image name="Twitter_logo_white.png" width="1139" height="926"/>
+        <image name="Twitter_logo_white" width="1139" height="926"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

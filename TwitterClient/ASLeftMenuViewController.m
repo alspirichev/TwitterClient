@@ -43,10 +43,10 @@
 
 #pragma mark - UITableViewDelegate
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return 54;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 54;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -105,12 +105,13 @@
     }
     
     NSArray *titles = @[@"Profile", @"Home", @"Mentions", @"", @"Log Out"];
-    cell.textLabel.text = titles[indexPath.row];
+    NSArray* images = @[@"Profile2", @"Home", @"comment", @"", @"logout"];
     
-//    NSArray *images = @[@"IconHome", @"IconCalendar", @"IconProfile", @"IconSettings", @"IconEmpty"];
-//    cell.imageView.image = [UIImage imageNamed:images[indexPath.row]];
+    cell.textLabel.text = titles[indexPath.row];
+    cell.imageView.image = [UIImage imageNamed:images[indexPath.row]];
+
     
     return cell;
-
 }
+
 @end

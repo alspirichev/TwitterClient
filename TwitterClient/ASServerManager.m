@@ -141,4 +141,70 @@ NSString * const kTwitterBaseUrl =          @"https://api.twitter.com";
       }];
 }
 
+#pragma mark - Work with tweet
+
+- (void)createTweetWithTweet:(NSString *)tweet params:(NSDictionary *)params completion:(void (^)(ASTweet *tweet, NSError *))completion
+{
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:params];
+    
+    [parameters setObject:tweet forKey:@"status"];
+    [self POST:@"1.1/statuses/update.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        ASTweet *tweet = [[ASTweet alloc] initWithDictionary:responseObject];
+        completion(tweet, nil);
+        NSLog(@"successfully tweeted");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        completion(nil, error);
+        NSLog(@"failed to tweet");
+    }];
+}
+
+- (void)favoriteTweet:(NSInteger)tweetId
+{
+    NSDictionary *params = @{@"id" : @(tweetId)};
+    
+    [self POST:@"1.1/favorites/create.json" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"successfully favorited");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error.localizedDescription);
+    }];
+}
+
+- (void)unfavoriteTweet:(NSInteger)tweetId
+{
+    NSDictionary *params = @{@"id" : @(tweetId)};
+    
+    [self POST:@"1.1/favorites/destroy.json" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"successfully unfavorited");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error.localizedDescription);
+    }];
+}
+
+- (void)retweetTweet:(NSInteger)tweetId completion:(void (^)(NSInteger, NSError *))completion
+{
+    NSString *retweetUrl = [NSString stringWithFormat:@"1.1/statuses/retweet/%ld.json", tweetId];
+    
+    [self POST:retweetUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"successfully retweeted");
+        
+        NSInteger retweetId = [responseObject[@"id"] integerValue];
+        completion(retweetId, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error.localizedDescription);
+        completion(-1, error);
+    }];
+}
+
+- (void)unRetweetTweet:(NSInteger)tweetId completion:(void (^)(NSError *))completion {
+    NSString *retweetUrl = [NSString stringWithFormat:@"1.1/statuses/destroy/%ld.json", tweetId];
+    [self POST:retweetUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"successfully unRetweeted");
+        completion(nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error.localizedDescription);
+        completion(error);
+    }];
+}
+
+
 @end

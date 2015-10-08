@@ -8,14 +8,16 @@
 
 #import "ASTweetsViewController.h"
 #import "ASComposeTweetController.h"
+#import "ASProfileViewController.h"
 
 #import "ASServerManager.h"
 #import "ASTweetCell.h"
 
+#import <RESideMenu/RESideMenu.h>
 #import <UIScrollView+SVPullToRefresh.h>
 #import <UIScrollView+SVInfiniteScrolling.h>
 
-@interface ASTweetsViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface ASTweetsViewController () <UITableViewDataSource, UITableViewDelegate, ASComposeTweetControllerDelegate, ASTweetCellDelegate>
 
 @property (strong, nonatomic) NSMutableArray *tweets;
 
@@ -100,6 +102,8 @@
 - (void)onCompose
 {
     ASComposeTweetController *ctc = [[ASComposeTweetController alloc] init];
+    ctc.delegate = self;
+    ctc.replyToTweet = nil;
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:ctc];
     [self presentViewController:nvc animated:YES completion:nil];
 }
@@ -147,6 +151,57 @@
     
 }
 
+#pragma mark - ASComposeTweetControllerDelegate Method
+
+- (void)composeTweetController:(ASComposeTweetController *)composeTweetController didSendTweet:(NSString *)tweet
+{
+    [[ASServerManager sharedManager] createTweetWithTweet:tweet
+                                                   params:nil
+                                               completion:^(ASTweet *tweet, NSError *error) {
+                                                   if (error == nil) {
+                                                       [self.tweets insertObject:tweet atIndex:0];
+                                                       [self.tableView reloadData];
+                                                   } else {
+                                                       NSLog(@"%@", error.localizedDescription);
+                                                   }
+                                               }];
+}
+
+- (void)composeTweetController:(ASComposeTweetController *)composeTweetController
+                  didSendTweet:(NSString *)tweet inReplyToStatusId:(NSInteger)statusId
+{
+    NSDictionary *params = @{@"in_reply_to_status_id" : @(statusId)};
+
+    [[ASServerManager sharedManager] createTweetWithTweet:tweet
+                                                   params:params
+                                               completion:^(ASTweet *tweet, NSError *error) {
+                                                   if (error == nil) {
+                                                       [self.tweets insertObject:tweet atIndex:0];
+                                                       [self.tableView reloadData];
+                                                   } else {
+                                                       NSLog(@"%@", error.localizedDescription);
+                                                   }
+                                               }];
+}
+
+#pragma mark - ASTweetCellDelegate Methods
+
+- (void)tweetCell:(ASTweetCell *)cell didReplyToTweet:(ASTweet *)tweet
+{
+    ASComposeTweetController *ctc = [[ASComposeTweetController alloc] init];
+    ctc.replyToTweet = tweet;
+    ctc.delegate = self;
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:ctc];
+    [self presentViewController:nvc animated:YES completion:nil];
+}
+
+- (void)tweetCell:(ASTweetCell *)cell didTapUser:(ASUser *)user
+{
+    ASProfileViewController *pvc = [[ASProfileViewController alloc] initWithUser:user];
+    [self.navigationController pushViewController:pvc animated:YES];
+}
+
+
 #pragma mark - UITableViewDataSource Mathods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -157,6 +212,7 @@
 {
     ASTweetCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TweetCell" forIndexPath:indexPath];
     cell.tweet = self.tweets[indexPath.row];
+    cell.delegate = self;
     return cell;
 }
 

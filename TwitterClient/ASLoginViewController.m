@@ -29,7 +29,8 @@
 
 #pragma mark - Actions
 
-- (IBAction)onLogin:(id)sender {
+- (IBAction)onLogin:(id)sender
+{
     [[ASServerManager sharedManager] loginWithCompletion:^(ASUser *user, NSError *error) {
         if (user != nil) {
             

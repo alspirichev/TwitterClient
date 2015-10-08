@@ -9,8 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "ASTweet.h"
 
+@class ASTweetCell;
+
+@protocol ASTweetCellDelegate <NSObject>
+
+- (void)tweetCell:(ASTweetCell *)cell didReplyToTweet:(ASTweet *)tweet;
+- (void)tweetCell:(ASTweetCell *)cell didTapUser:(ASUser *)user;
+
+@end
+
 @interface ASTweetCell : UITableViewCell
 
+@property (nonatomic, weak) id<ASTweetCellDelegate> delegate;
 @property (nonatomic, strong) ASTweet * tweet;
 
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
